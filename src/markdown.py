@@ -1,3 +1,5 @@
+import re
+
 from textnode import TextNode, TextType
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
@@ -19,4 +21,10 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 splitnodes.append(TextNode(texts[i], text_type))
     return(newnodes + splitnodes)
 
+def extract_md_images(text):
+    matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return matches
 
+def extract_md_links(text):
+    matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return matches
