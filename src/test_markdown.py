@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from markdown import split_nodes_delimiter
+from markdown import split_nodes_delimiter, extract_md_images, extract_md_links
 
 class Testsplitnodes(unittest.TestCase):
     def test_code(self):
@@ -51,6 +51,15 @@ class Testsplitnodes(unittest.TestCase):
         node = TextNode("bold**", TextType.TEXT)
         with self.assertRaises(ValueError):
             split_nodes_delimiter([node], '**', TextType.BOLD)
+
+class Testextract_md(unittest.TestCase):
+    def test_extract_md_images(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif)"
+        self.assertListEqual([("rick roll", "https://i.imgur.com/aKaOqIh.gif")], extract_md_images(text))
+
+    def test_extract_md_links(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev)"
+        self.assertListEqual([("to boot dev", "https://www.boot.dev")], extract_md_links(text))
 
 if __name__ == "__main__":
     unittest.main()
