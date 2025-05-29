@@ -52,7 +52,6 @@ class Testsplitnodes(unittest.TestCase):
         with self.assertRaises(ValueError):
             split_nodes_delimiter([node], '**', TextType.BOLD)
 
-class Testextract_md(unittest.TestCase):
     def test_extract_md_images(self):
         text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif)"
         self.assertListEqual([("rick roll", "https://i.imgur.com/aKaOqIh.gif")], extract_md_images(text))
