@@ -19,7 +19,8 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 splitnodes.append(TextNode(texts[i], TextType.TEXT))
             else:
                 splitnodes.append(TextNode(texts[i], text_type))
-    return(newnodes + splitnodes)
+        newnodes.extend(splitnodes)
+    return newnodes
 
 def extract_md_images(text):
     matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
@@ -38,7 +39,7 @@ def split_nodes_image(old_nodes):
         origtext = node.text
         images = extract_md_images(node.text)
         if len(images) == 0:
-            new_nodes.append(node)
+            newnodes.append(node)
             continue
         for image in images:
             texts = origtext.split(f"![{image[0]}]({image[1]})", 1)
@@ -60,8 +61,8 @@ def split_nodes_link(old_nodes):
             continue
         origtext = node.text
         links = extract_md_links(node.text)
-        if len(images) == 0:
-            new_nodes.append(node)
+        if len(links) == 0:
+            newnodes.append(node)
             continue
         for link in links:
             texts = origtext.split(f"[{link[0]}]({link[1]})", 1)
@@ -76,4 +77,10 @@ def split_nodes_link(old_nodes):
     return newnodes
 
 def text_to_textnodes(text):
-    pass
+    nodes = [TextNode(text, TextType.TEXT)]
+    nodes = split_nodes_delimiter(nodes, '**', TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, '_', TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, '`', TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
