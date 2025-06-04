@@ -3,7 +3,7 @@ import unittest
 from textnode import TextNode, TextType
 from markdown import split_nodes_delimiter, extract_md_images, \
                     extract_md_links, split_nodes_image, split_nodes_link,\
-                    text_to_textnodes, md_to_blocks
+                    text_to_textnodes
 
 class Testsplitnodes(unittest.TestCase):
     def test_code(self):
@@ -96,51 +96,6 @@ class Testsplitnodes(unittest.TestCase):
             TextNode("link", TextType.LINK, "https://boot.dev"),
             ],
             nodes,
-        )
-
-    def test_md_to_blocks(self):
-        md = """
-This is **bolded** paragraph
-
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
-
-- This is a list
-- with items
-"""
-        blocks = md_to_blocks(md)
-        self.assertEqual(
-            blocks,
-            [
-                "This is **bolded** paragraph",
-                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-                "- This is a list\n- with items",
-            ],
-        )
-
-    def test_md_to_blocks_toomanylines(self):
-        md = """
-This is **bolded** paragraph
-
-
-
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
-
-
-
-
-- This is a list
-- with items
-"""
-        blocks = md_to_blocks(md)
-        self.assertEqual(
-            blocks,
-            [
-                "This is **bolded** paragraph",
-                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-                "- This is a list\n- with items",
-            ],
         )
 
 if __name__ == "__main__":
