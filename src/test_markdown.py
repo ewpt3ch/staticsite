@@ -3,7 +3,7 @@ import unittest
 from textnode import TextNode, TextType
 from markdown import split_nodes_delimiter, extract_md_images, \
                     extract_md_links, split_nodes_image, split_nodes_link,\
-                    text_to_textnodes
+                    text_to_textnodes, extract_title
 
 class Testsplitnodes(unittest.TestCase):
     def test_code(self):
@@ -97,6 +97,10 @@ class Testsplitnodes(unittest.TestCase):
             ],
             nodes,
         )
+
+    def test_title(self):
+        md = "stuff this is stuff # not the header\n\n#      This is the h1 header       \n\n## this is an h2"
+        self.assertEqual("This is the h1 header", extract_title(md))
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,10 +1,12 @@
-from textnode import TextNode
-from shutil import rmtree, copy
 from os import path, mkdir, listdir
+from shutil import rmtree, copy
+from gencontent import generate_page
 
 #define paths
 public = 'public'
 static = 'static'
+content = 'content'
+template_path = './template.html'
 
 # remove all exisiting files in public dir
 if path.exists(public):
@@ -27,6 +29,12 @@ def copystatic(srcpath, destpath):
 
 def main():
     copystatic(static, public)
+    print("Generating Page")
+    generate_page(
+            path.join(content, "index.md"),
+            template_path,
+            path.join(public, "index.html")
+    )
 
 if __name__ == "__main__":
     main()

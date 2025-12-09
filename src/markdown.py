@@ -67,7 +67,7 @@ def split_nodes_link(old_nodes):
         for link in links:
             texts = origtext.split(f"[{link[0]}]({link[1]})", 1)
             if len(texts) != 2:
-                raise ValueError("invalid markdown, tag not closed")
+                    raise ValueError("invalid markdown, tag not closed")
             if texts[0] != "":
                 newnodes.append(TextNode(texts[0], TextType.TEXT))
             newnodes.append(TextNode(link[0], TextType.LINK, link[1]))
@@ -94,3 +94,9 @@ def md_to_blocks(markdown):
 
     return blocks
 
+def extract_title(text):
+    blocks = md_to_blocks(text)
+    for block in blocks:
+        if block.startswith('# '):
+            return block.strip('# ')
+    raise ValueError("no h1 in markdown")
