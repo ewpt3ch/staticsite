@@ -1,6 +1,6 @@
 from os import path, mkdir, listdir
 from shutil import rmtree, copy
-from gencontent import generate_page
+from gencontent import gen_page_recurse
 
 #define paths
 public = 'public'
@@ -30,11 +30,12 @@ def copystatic(srcpath, destpath):
 def main():
     copystatic(static, public)
     print("Generating Page")
-    generate_page(
-            path.join(content, "index.md"),
+    gen_page_recurse(
+            content,
             template_path,
-            path.join(public, "index.html")
+            public
     )
+    
 
 if __name__ == "__main__":
     main()

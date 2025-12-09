@@ -1,4 +1,6 @@
 import os
+
+from shutil import rmtree
 from mdtohtml import markdown_to_html_node
 
 
@@ -24,6 +26,21 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(dest_dir_path, exist_ok=True)
     to_file = open(dest_path, "w")
     to_file.write(template)
+
+def gen_page_recurse(src, temp, dest):
+    tree = os.listdir(src)
+    print(tree)
+    for item in tree:
+        print(item)
+        if os.path.isfile(os.path.join(src, item)):
+            generate_page(os.path.join(src, item),
+                          temp,
+                          os.path.join(dest, "index.html"))
+        else:
+            os.mkdir(os.path.join(dest, item))
+            gen_page_recurse(os.path.join(src, item),
+                             temp,
+                             os.path.join(dest, item))
 
 
 def extract_title(md):
