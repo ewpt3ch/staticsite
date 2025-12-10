@@ -1,9 +1,16 @@
-from os import path, mkdir, listdir
+import sys
+
+from os import path, makedirs, listdir
 from shutil import rmtree, copy
 from gencontent import gen_page_recurse
 
+basepath = '/'
+if len(sys.argv) > 1:
+    basepath = sys.argv[1]
+
+
 #define paths
-public = 'public'
+public = 'docs'
 static = 'static'
 content = 'content'
 template_path = './template.html'
@@ -13,7 +20,7 @@ if path.exists(public):
     rmtree(public)
 
 # recreate public and copy everything in static to public
-mkdir(public) # normally would want to error check and exit if fails
+makedirs(public) # normally would want to error check and exit if fails
 
 def copystatic(srcpath, destpath):
     tree = listdir(srcpath)
@@ -23,7 +30,7 @@ def copystatic(srcpath, destpath):
         if path.isfile(path.join(srcpath, item)):
             copy(path.join(srcpath, item), destpath)
         else:
-            mkdir(path.join(destpath, item))
+            makedirs(path.join(destpath, item))
             copystatic(path.join(srcpath, item), path.join(destpath, item))
 
 
@@ -33,7 +40,8 @@ def main():
     gen_page_recurse(
             content,
             template_path,
-            public
+            public,
+            basepath
     )
     
 

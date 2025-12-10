@@ -1,10 +1,20 @@
 import os
-
-from shutil import rmtree
+from pathlib import Path
 from mdtohtml import markdown_to_html_node
 
 
-def generate_page(from_path, template_path, dest_path):
+def gen_page_recurse(dir_path_content, template_path, dest_dir_path, basepath):
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        if os.path.isfile(from_path):
+            dest_path = Path(dest_path).with_suffix(".html")
+            generate_page(from_path, template_path, dest_path, basepath)
+        else:
+            gen_page_recurse(from_path, template_path, dest_path, basepath)
+
+
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f" * {from_path} {template_path} -> {dest_path}")
     from_file = open(from_path, "r")
     markdown_content = from_file.read()
@@ -20,27 +30,14 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(markdown_content)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
+    template = template.replace('href="/', 'href="' + basepath)
+    template = template.replace('src="/', 'src="' + basepath)
 
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path != "":
         os.makedirs(dest_dir_path, exist_ok=True)
     to_file = open(dest_path, "w")
     to_file.write(template)
-
-def gen_page_recurse(src, temp, dest):
-    tree = os.listdir(src)
-    print(tree)
-    for item in tree:
-        print(item)
-        if os.path.isfile(os.path.join(src, item)):
-            generate_page(os.path.join(src, item),
-                          temp,
-                          os.path.join(dest, "index.html"))
-        else:
-            os.mkdir(os.path.join(dest, item))
-            gen_page_recurse(os.path.join(src, item),
-                             temp,
-                             os.path.join(dest, item))
 
 
 def extract_title(md):
