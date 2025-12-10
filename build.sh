@@ -1,3 +1,1 @@
-#! /bin/sh
-
-python3 src/main.py "staticsite/"
+python3 src/main.py "/staticsite/"
